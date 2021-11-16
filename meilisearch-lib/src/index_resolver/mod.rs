@@ -79,8 +79,8 @@ impl IndexUid {
     }
 
     #[cfg(test)]
-    pub fn new_unchecked(s: String) -> Self {
-        Self(s)
+    pub fn new_unchecked(s: impl AsRef<str>) -> Self {
+        Self(s.as_ref().to_string())
     }
 
     pub fn into_inner(self) -> String {
@@ -173,7 +173,7 @@ where
             }
             TaskContent::SettingsUpdate { settings, is_deletion } => {
                 let index = if *is_deletion {
-                        self.get_index(index_uid).await?
+                        self.get_index(index_uid.into_inner()).await?
                     } else {
                         self.get_or_create_index(index_uid, task.id).await?
                 };
